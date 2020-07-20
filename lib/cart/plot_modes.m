@@ -52,8 +52,7 @@ switch scale_opt
                      ncont,...
                      'LineStyle','none'); 
             axis equal; 
-            axis([x_min x_max y_min y_max]/um);
-
+            axis([x_min x_max y_min y_max]/um);           
 
         end
 
@@ -84,8 +83,7 @@ switch scale_opt
                      'LineStyle','none'); 
             axis equal; 
             axis([x_min x_max y_min y_max]/um);
-
-
+            
         end
     
     otherwise
