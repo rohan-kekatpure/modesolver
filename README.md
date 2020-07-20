@@ -6,7 +6,17 @@ The code in this repository aims to solve two specific eigenvalue
 problems commonly encountered in engineering electromagnetic
 (including nanophotonic) waveguides and resonators. The code was
 originally written in MATLAB and has been recently verified to work in
-Octave.
+Octave. 
+
+The repository also serves as a code accompanying our paper 
+[First-Principles Full-Vectorial Eigenfrequency Computations for Axially Symmetric Resonators](https://ieeexplore.ieee.org/document/5665745)
+and includes code to reproduce the figures in the paper.
+
+<div style="text-align: center;">
+    <img src="assets/paper.png" width="400px">
+    <p> </p>
+</div>
+
 
 ### Background: electromagnetic eigenvalue problems
 
