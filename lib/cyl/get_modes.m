@@ -42,7 +42,7 @@ Xguess=speye(2*Nzr);
 
 evals_guess = (2*pi./lambda_guess)^2;
 
-m_solving = show_info('Solving...','Status');
+% m_solving = show_info('Solving...','Status');
 
 [evecs,evals]=eigs(IN.solparams.M_helmholtz,...
                    Xguess,...
@@ -50,9 +50,9 @@ m_solving = show_info('Solving...','Status');
                    evals_guess);
 
                
-close(m_solving);
+% close(m_solving);
 
-m_reshape = show_info('Creating Output Structure','Status');
+% m_reshape = show_info('Creating Output Structure','Status');
 
 k0_list = sqrt(diag(evals)); % Remember the eigenvalue solver returns k0^2. 
 
@@ -81,7 +81,7 @@ for sn = 1 : nsol
 
 end
 
-close(m_reshape);
+% close(m_reshape);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Print the roots in a tabular form

@@ -4,20 +4,14 @@ clc;
 
 format long;
 
-% Matlab
-% path('../Modules', path);
+% Ccartesian mode solver
+addpath("../lib/cart");
 
-% Octave
-addpath("../Modules");
 
 tic;
-
 I = sqrt(-1);
-
 um = 1e-6;
-
 nm = 1e-9;
-
 Z0 = 377;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,44 +19,29 @@ Z0 = 377;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eps_core = 3.5^2 ;
-
 eps_clad = 1.45^2;
-
 wg_width = 400 * nm;
-
 wg_height = 220 * nm;
-
 dpml_x = 1 * um;
-
 dpml_y = 1 * um;
-
 M_pml = 2; % quadratic PML
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Solution parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 lambda0 = 1550 * nm ; % Wavelength for mode solution 
-
 neff_guess = 2.3 - 0i; % Guess effective index of the sought mode
-
 nsol = 20; % number of eigenmodes to find 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Defining the mesh and co-ordinates
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 delta_x = 50 * nm;
-
 x_min = -3 * um;
-
 x_max = 3 * um;
-
-delta_y = 50 * nm;
-                        
+delta_y = delta_x;
 y_min = -3 * um;
-
 y_max = +3 * um;
 
 
@@ -70,7 +49,6 @@ y_max = +3 * um;
                               y_min,y_max,delta_y);
 
 nx = numel(x_i);
-
 ny = numel(y_i);
 
 box_printf(['NUMBER OF X GRID POINTS = ', num2str(nx),...
@@ -85,17 +63,12 @@ box_printf(['NUMBER OF X GRID POINTS = ', num2str(nx),...
 
 epsr = zeros(ny,nx); % nz rows, nr columns
 
-for i = 1 : ny
-    
-    for j = 1 : nx
-        
+for i = 1 : ny    
+    for j = 1 : nx        
         if (y_i(i) > - wg_height/2) && (y_i(i) < wg_height/2) ...
-                && (x_i(j) >= -wg_width/2) && (x_i(j) <= wg_width/2)
-                
-                epsr(i,j) = eps_core;
-                
-        else 
-                
+                && (x_i(j) >= -wg_width/2) && (x_i(j) <= wg_width/2)                
+                epsr(i,j) = eps_core;                
+        else                 
                 epsr(i,j) = eps_clad;
         end
     end
@@ -196,11 +169,8 @@ show_profile(IN,'index');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 IN.solparams.M_helmholtz = get_helmholtz_mat(IN);
-
 nnz(IN.solparams.M_helmholtz);
-
 OUT = get_modes(IN);
-
 toc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

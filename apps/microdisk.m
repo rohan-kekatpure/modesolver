@@ -1,17 +1,16 @@
 close all;
 clear all ; 
 clc;
-
 format long;
-path('/Users/rdkekat/Research/Codes/Matlab/ModeSolver_2D/FDFDcode/Cylindrical/FromFirstPrinciples/Modules',path);
+
+% Cylindrical mode solver
+addpath("../lib/cyl");
+
 tic;
 
 I = sqrt(-1);
-
 um = 1e-6;
-
 nm = 1e-9;
-
 Z0 = 377;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,17 +18,11 @@ Z0 = 377;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eps_disk = 2.00^2;
-
 eps_cladding = 1.45^2;
-
 R_disk = 20 * um;
-
 h_disk = 250 * nm;
-
 dpml_r = 1 * um;
-
 dpml_z = 1 * um;
-
 M_pml = 2; % quadratic PML
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,9 +30,7 @@ M_pml = 2; % quadratic PML
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 lambda_guess = 1555 * nm; % Guess wavelength of the sought mode
-
 mphi = 125;  % m-number of the sought mode
-
 nsol = 20; % number of eigenvalues to find 
 
 
@@ -48,15 +39,10 @@ nsol = 20; % number of eigenvalues to find
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 delta_r = 50 * nm;
-
 r_min = 15 * um;
-
 r_max = 25 * um;
-
-delta_z = delta_r ;                        
-                        
+delta_z = delta_r ;                                                
 z_min = -4 * um;
-
 z_max = +4 * um;
 
 
@@ -64,7 +50,6 @@ z_max = +4 * um;
                               z_min,z_max,delta_z);
 
 nr = length(r_i);
-
 nz = length(z_i);
 
 box_printf(['NUMBER OF RADIAL GRID POINTS = ', num2str(nr),...
@@ -79,17 +64,12 @@ box_printf(['NUMBER OF RADIAL GRID POINTS = ', num2str(nr),...
 
 epsr = zeros(nz,nr); % nz rows, nr columns
 
-for i = 1 : nz
-    
-    for j = 1 : nr
-        
+for i = 1 : nz    
+    for j = 1 : nr        
         if (z_i(i) > - h_disk/2) && (z_i(i) < h_disk/2) ...
-                && (r_i(j) >= r_min) && (r_i(j) <= R_disk)
-                
-                epsr(i,j) = eps_disk;
-                
-        else 
-                
+                && (r_i(j) >= r_min) && (r_i(j) <= R_disk)                
+                epsr(i,j) = eps_disk;                
+        else                 
                 epsr(i,j) = eps_cladding;
         end
     end
@@ -182,11 +162,8 @@ IN.pml.sz_h = sz_h ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 IN.solparams.M_helmholtz = get_helmholtz_mat(IN);
-
 nnz(IN.solparams.M_helmholtz);
-
 OUT = get_modes(IN);
-
 toc;
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all force;

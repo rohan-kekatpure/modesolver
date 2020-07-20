@@ -1,17 +1,14 @@
 close all;
 clear all ; 
 clc;
-
 format long;
 
-path('/Users/rdkekat/Research/Codes/Matlab/ModeSolver_2D/FDFDcode/Cylindrical/FromFirstPrinciples/Modules',path);
+% Cylindrical mode solver
+addpath("../lib/cyl");
 
 I = sqrt(-1);
-
 um = 1e-6;
-
 nm = 1e-9;
-
 Z0 = 377;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,23 +20,14 @@ Z0 = 377;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eps_ring = 3.5^2; % permittivity of ring material
-
 eps_air = 1.00^2; % permittivity of air
-
 eps_substr = 1.45^2; % permittivity of the substrate
-
 R_ring = 2.5 * um; % Average radius of the microring (at the midpoint)
-
 h_ring = 250 * nm; % Thickness of the nitride layer defines ring thickness
-
 WT = 300 * nm; % Top width of the trapezium
-
 WB = 500 * nm; % Bottom width of the trapezium
-
 ZB = 0; % Substrate sits on  z = 0 plane
-
 ZT = ZB + h_ring; 
-
 tan_theta = 0.5 * (WB - WT) / (ZT - ZB);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,11 +39,8 @@ tan_theta = 0.5 * (WB - WT) / (ZT - ZB);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % lambda_guess = 1550 * nm; % Guess wavelength of the sought mode
-
 lambda_guess = (1597.359 - I * 1.94e-11) * nm; % Guess wavelength of the sought mode
-
 mphi = 24;  % m-number of the sought mode
-
 nsol = 20; % number of eigenvalues to find 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,28 +52,19 @@ nsol = 20; % number of eigenvalues to find
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 delta_r = 25 * nm;
-
 r_min = delta_r;
-
 r_max = 7 * um;
-
-delta_z = delta_r ;                        
-                        
+delta_z = delta_r ;                                                
 z_min = -4 * um;
-
 z_max = +4 * um;
-
 dpml_r = 1 * um;
-
 dpml_z = 1 * um;
-
 M_pml = 2; % quadratic PML
 
 [r_i, r_h, z_i, z_h] = get_rz(r_min,r_max,delta_r,...
                               z_min,z_max,delta_z);
 
 nr = length(r_i);
-
 nz = length(z_i);
 
 box_printf(['NUMBER OF RADIAL GRID POINTS = ', num2str(nr),...
@@ -105,35 +81,22 @@ box_printf(['NUMBER OF RADIAL GRID POINTS = ', num2str(nr),...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 epsr = ones(nz,nr); % nz rows, nr columns
-
-for i = 1 : nz % iteration over z
-    
-    for j = 1 : nr % iteration over r
-        
-        if z_i(i) <= 0
-            
-            epsr(i,j) = eps_substr;
-            
+for i = 1 : nz % iteration over z    
+    for j = 1 : nr % iteration over r        
+        if z_i(i) <= 0            
+            epsr(i,j) = eps_substr;            
         end
         
-        if (z_i(i) >= ZB) && (z_i(i) <=ZT)
-            
+        if (z_i(i) >= ZB) && (z_i(i) <=ZT)            
             dw = (ZT - z_i(i)) * tan_theta;
-
             rR = R_ring + WT/2 + dw;  
-
             rL = R_ring - WT/2 - dw ; 
-            
-            if  (r_i(j) > rL) && (r_i(j) <= rR+eps)        
-                    
-                epsr(i,j) = eps_ring;
-                
-            end
-                
-        end
-                
-    end
-    
+
+            if  (r_i(j) > rL) && (r_i(j) <= rR+eps)                            
+                epsr(i,j) = eps_ring;                
+            end                
+        end                
+    end    
 end
 
 [epsr_rh, epsr_zp,epsr_zm] = get_shift_epsr(epsr);
@@ -233,7 +196,8 @@ IN.pml.sz_h = sz_h ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 IN.solparams.M_helmholtz = get_helmholtz_mat(IN);
-
 OUT = get_modes(IN);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+close all force;

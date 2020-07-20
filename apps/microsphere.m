@@ -6,17 +6,15 @@
 close all;
 clear all ; 
 clc;
-
 format long;
 
-%tic;
+% Cylindrical mode solver
+addpath("../lib/cyl");
 
+tic;
 I = sqrt(-1);
-
 um = 1e-6;
-
 nm = 1e-9;
-
 Z0 = 377;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,15 +22,10 @@ Z0 = 377;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eps_sph = 2.5^2;
-
 eps_amb = 1.45^2;
-
 R_sph = 2.5 * um;
-
 dpml_r = 1 * um;
-
 dpml_z = 1 * um;
-
 M_pml = 2; % quadratic PML
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,26 +33,18 @@ M_pml = 2; % quadratic PML
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 lambda_guess = (1484.93-0.0208235i)*nm; % Guess wavelength of the sought mode
-
 mphi = 21;  % m-number of the sought mode
-
 nsol = 20; % number of eigenvalues to find 
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Defining the mesh and co-ordinates
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 delta_r = 25 * nm;
-
 r_min = delta_r;
-
 r_max = 7 * um;
-
-delta_z = delta_r ;                        
-                        
+delta_z = delta_r ;                                                
 z_min = -4 * um;
-
 z_max = +4 * um;
 
 
@@ -67,7 +52,6 @@ z_max = +4 * um;
                               z_min,z_max,delta_z);
 
 nr = length(r_i);
-
 nz = length(z_i);
 
 box_printf(['NUMBER OF RADIAL GRID POINTS = ', num2str(nr),...
@@ -82,16 +66,11 @@ box_printf(['NUMBER OF RADIAL GRID POINTS = ', num2str(nr),...
 
 epsr = zeros(nz,nr); % nz rows, nr columns
 
-for i = 1 : nz
-    
-    for j = 1 : nr
-        
-        if (r_i(j)^2 + z_i(i)^2 <= R_sph^2)
-                
-                epsr(i,j) = eps_sph;
-                
-        else 
-                
+for i = 1 : nz    
+    for j = 1 : nr        
+        if (r_i(j)^2 + z_i(i)^2 <= R_sph^2)                
+                epsr(i,j) = eps_sph;                
+        else                 
                 epsr(i,j) = eps_amb;
         end
     end
@@ -184,10 +163,7 @@ IN.pml.sz_h = sz_h ;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 IN.solparams.M_helmholtz = get_helmholtz_mat(IN);
-
-tic;
-
 OUT = get_modes(IN);
-
 toc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all force;

@@ -59,7 +59,7 @@ switch scale_opt
         end
 
     
-    case'log'
+    case 'log'
 
         for sn = 1 : length(solnum_list)
 
